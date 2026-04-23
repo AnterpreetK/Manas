@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Birthday Quest 💖</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #0f172a;
+            color: white;
+            padding: 50px;
+        }
+
+        .box {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: pink;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <h2 id="question">Hey you 👀 Ready for your birthday surprise?</h2>
+        <input type="text" id="answer" placeholder="Type your answer here">
+        <br>
+        <button onclick="checkAnswer()">Submit</button>
+        <p id="response"></p>
+    </div>
+
+    <script>
+        let step = 0;
+
+        const questions = [
+            "Where did we first meet? 💭",
+            "What nickname do I call you? 😏",
+            "What’s our song? 🎶",
+            "Final question: Who loves you the most? ❤️"
+        ];
+
+        const answers = [
+            "INSTAGRAM",
+            "BABY",
+            "PERFECT",
+            "YOU"
+        ];
+
+        function checkAnswer() {
+            let input = document.getElementById("answer").value.toUpperCase();
+
+            if (input === answers[step]) {
+                step++;
+
+                if (step < questions.length) {
+                    document.getElementById("question").innerText = questions[step];
+                    document.getElementById("answer").value = "";
+                    document.getElementById("response").innerText = "Correct 😌 Next one...";
+                } else {
+                    document.body.innerHTML = `
+        <h1>🎉 HAPPY BIRTHDAY MY LOVE 🎉</h1>
+        <p>You made it through... just like we made it through distance ❤️</p>
+        <p>I love you more than words can ever explain.</p>
+        <p>Now go check your surprise 🎁</p>
+      `;
+                }
+            } else {
+                document.getElementById("response").innerText = "Hmm nope 👀 try again";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
