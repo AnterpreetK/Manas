@@ -1,383 +1,973 @@
-import React, { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Star, Gift, Music, CalendarDays, Camera, Sparkles, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
 
-const story = {
-boyName: "Manas Walia",
-fromName: "Anter Walia",
-title: "A little universe made just for you",
-subtitle: "Not just a birthday surprise — a scrapbook, a game, and a love letter.",
-accent: "from-fuchsia-500 via-pink-400 to-sky-400",
-introNote:
-`"Haa birthday boy. This is for you — my baby, my bhanupati, my favorite person. I wanted to make you something that
-feels a little like us: soft, filmy, funny, and full of love.",`
-clues: [
-{
-prompt: "First clue 💌 — Where did we first meet?",
-answer: "mussorie",
-success: "Yesss. Mussoorie was the beginning of everything beautiful.",
-},
-{
-prompt: "Second clue 🏍️ — What was one of our first real memories together?",
-answer: "bike ride thru hills",
-success: "Exactly. That bike ride through the hills still lives in my head rent free.",
-},
-{
-prompt: "Third clue 🎵 — What is our song?",
-answer: "bade ache lagte hai",
-success: "Correct. You’ve unlocked the final surprise, baby.",
-},
-],
-reasonsTitle: "Reasons why I love you",
-reasons: [
-"You love me like your family.",
-"You know what is right and what is wrong.",
-"You always give me your time.",
-"You are the best person I have ever met.",
-"You are the funniest guy I know.",
-"You love me like crazy and stay through thick and thin.",
-],
-timeline: [
-{
-title: "Mussoorie trips", text: "Where we first met, and where my heart quietly began choosing you.", sticker: "🏔️"
-},
-{
-title: "Bike ride through the hills", text: "One of my first real memories with you — windy roads, pretty views, and
-you.", sticker: "🏍️" },
-{
-title: "Chandigarh gedi + Zirakpur meet", text: "The kind of memories that replay in my mind when I miss you the
-most.", sticker: "🚗" },
-{
-title: "August", text: "Now I’m just looking forward to meeting you again and making even more memories with you.",
-sticker: "📆"
-},
-],
-dailyReminders: [
-"Distance is temporary.",
-"Loving you is permanent.",
-"Next birthday, I won’t be on a screen. I’ll be right there.",
-"Damn, I’m lucky.",
-],
-song: {
-title: "Bade Achhe Lagte Hain",
-artist: "Our song",
-lyric:
-"Bade achhe lagte hain... yeh dharti, yeh nadiya, yeh raina... aur tum.",
-},
-finalMessage:
-"Happy birthday, my love. Damn, I’m lucky. Out of everyone, I get to love you — and that will always be one of my
-favorite things about life.",
-finalButtonText: "Open your birthday letter",
-letter:
-"Happy birthday my baby. I do not even know where to start because there is so much I feel for you and somehow words
-still feel small.You came into my life and made it softer, safer, and so much happier.From Mussoorie to our bike ride
-through the hills, from Chandigarh gedi to Zirakpur, from sleepy calls to missing you on random days — every version of
-us means so much to me.
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday Manas ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-I love the way you love me, so fully and so genuinely.I love that you give me your time, your care, your patience, your
-laughter, and your whole heart.I love that you are the funniest guy I know, but also the person I can trust when life
-feels heavy.You make me feel chosen, protected, and deeply loved.
+        :root {
+            --bg1: #6d5dfc;
+            --bg2: #7c4dff;
+            --bg3: #6ee7f9;
+            --paper: #f8f4ef;
+            --ink: #22223b;
+            --muted: #5b5f72;
+            --pink: #ff5fa2;
+            --pink-soft: #ffd8e8;
+            --yellow: #ffe58f;
+            --blue-soft: #dff6ff;
+            --green-soft: #e9ffe3;
+            --card-shadow: 0 18px 50px rgba(0, 0, 0, 0.14);
+        }
 
-Even with the distance, you still feel like home to me.And that is rare.That is special.That is you.I know this
-birthday is on a screen, but my love for you is not.It is real, steady, loud, and all yours.Thank you for being my
-person, my comfort, my baby, my bhanupati.
+        body {
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+            min-height: 100vh;
+            padding: 14px;
+            color: var(--ink);
+        }
 
-I am so proud of the man you are, and I feel ridiculously lucky that I get to love you.I cannot wait for August.I
-cannot wait for more rides, more laughter, more hugs, and more us.Happy birthday, my love.I hope this year is kind to
-you in every possible way — and I hope you always remember that no matter what, I am with you, through every thick and
-thin.
+        .outer {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(12px);
+            border-radius: 34px;
+            padding: 12px;
+        }
 
-I love you.Always.",
-photos: [
-"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop",
-"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
-"https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop",
-"https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop",
-],
-};
+        .inner {
+            background: var(--paper);
+            border-radius: 28px;
+            padding: 18px;
+        }
 
-const doodles = ["✦", "❤", "★", "!", "♡", "☁", "↺", "✿", "♫", "→"];
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fff, #fff2f7);
+            border-radius: 30px;
+            border: 4px solid #fff;
+            min-height: 76vh;
+            padding: 28px;
+        }
 
-function Sticker({ children, className = "" }) {
-return (
-<div className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/70 px-3 py-1 text-xs
-    font-semibold text-slate-700 shadow-sm backdrop-blur ${className}`}>
-    {children}
-</div>
-);
-}
+        .doodle {
+            position: absolute;
+            color: rgba(60, 60, 90, 0.18);
+            font-size: 22px;
+            user-select: none;
+            pointer-events: none;
+        }
 
-function ScrapCard({ children, className = "", rotate = 0 }) {
-return (
-<motion.div initial={{ opacity: 0, y: 18, rotate: rotate - 2 }} animate={{ opacity: 1, y: 0, rotate }} transition={{
-    duration: 0.45 }} className={`relative rounded-[28px] border-4 border-white bg-white p-4
-    shadow-[0_15px_50px_rgba(0,0,0,0.12)] ${className}`}>
-    <div className="absolute -top-2 left-8 h-6 w-20 rotate-[-4deg] rounded-sm bg-yellow-200/80 blur-[0.2px]" />
-    {children}
-</motion.div>
-);
-}
+        .hero-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 26px;
+            align-items: center;
+            min-height: 70vh;
+        }
 
-function SectionTitle({ icon: Icon, children }) {
-return (
-<div className="mb-4 flex items-center gap-3">
-    <div className="rounded-2xl bg-pink-100 p-2 text-pink-500">
-        <Icon size={18} />
-    </div>
-    <h2 className="font-black tracking-tight text-slate-800 text-2xl md:text-3xl">{children}</h2>
-</div>
-);
-}
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            font-size: 13px;
+            font-weight: 800;
+            color: #5f4b66;
+            backdrop-filter: blur(4px);
+        }
 
-export default function BirthdayScrapbookQuest() {
-const [started, setStarted] = useState(false);
-const [step, setStep] = useState(0);
-const [input, setInput] = useState("");
-const [status, setStatus] = useState("");
-const [showLetter, setShowLetter] = useState(false);
+        .hero h1 {
+            font-family: "Baloo 2", cursive;
+            font-size: clamp(42px, 6vw, 78px);
+            line-height: 0.95;
+            margin-top: 16px;
+            max-width: 820px;
+        }
 
-const done = step >= story.clues.length;
-const progress = useMemo(() => `${Math.min(step, story.clues.length)}/${story.clues.length}`, [step]);
+        .accent {
+            color: var(--pink);
+        }
 
-const submit = () => {
-const expected = story.clues[step]?.answer?.trim().toLowerCase();
-const received = input.trim().toLowerCase();
-if (!expected) return;
-if (received === expected) {
-setStatus(story.clues[step].success);
-setInput("");
-setTimeout(() => {
-setStep((s) => s + 1);
-setStatus("");
-}, 900);
-} else {
-setStatus("Nopeee, try again cutie 💭");
-}
-};
+        .hero p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-top: 16px;
+            max-width: 780px;
+            color: var(--muted);
+        }
 
-return (
-<div className="min-h-screen bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-300 p-3 md:p-6">
-    <div
-        className="mx-auto max-w-7xl rounded-[34px] border border-white/30 bg-white/20 p-3 shadow-2xl backdrop-blur md:p-5">
-        <div className="rounded-[30px] bg-[#f7f3ee] p-4 md:p-6">
-            {!started ? (
-            <motion.section initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
-                className="relative overflow-hidden rounded-[34px] border-4 border-white bg-gradient-to-br from-white to-rose-50 p-6 md:p-10">
-                <div className="pointer-events-none absolute inset-0 opacity-80">
-                    {Array.from({ length: 18 }).map((_, i) => (
-                    <div key={i} className="absolute text-slate-300" style={{ left: `${(i * 17) % 95}%`, top: `${(i *
-                        13) % 88}%`, transform: `rotate(${(i * 11) % 40 - 20}deg)` }}>
-                        {doodles[i % doodles.length]}
-                    </div>
-                    ))}
-                </div>
+        .hero-buttons {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+        }
 
-                <div className="grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
-                    <div className="relative z-10">
-                        <Sticker className="mb-4">
-                            <Sparkles size={14} /> made with too much love
-                        </Sticker>
-                        <h1 className="max-w-3xl text-4xl font-black leading-tight text-slate-900 md:text-6xl">
-                            HAI, THIS IS FOR YOU <span className="text-pink-500">{story.boyName}</span>
-                        </h1>
-                        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700 md:text-lg">
-                            {story.introNote}
+        .btn {
+            border: none;
+            cursor: pointer;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-weight: 800;
+            font-size: 15px;
+            transition: 0.25s ease;
+        }
+
+        .btn-dark {
+            background: #121826;
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .btn-dark:hover,
+        .btn-pink:hover,
+        .btn-soft:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .btn-pink {
+            background: #ffb6cf;
+            color: #2d2037;
+        }
+
+        .btn-soft {
+            background: #f2f4f7;
+            color: #3f4659;
+        }
+
+        .scrap-card {
+            position: relative;
+            background: #fffefb;
+            border: 4px solid #fff;
+            border-radius: 28px;
+            padding: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .tape {
+            position: absolute;
+            top: -8px;
+            left: 28px;
+            width: 84px;
+            height: 22px;
+            background: rgba(255, 229, 143, 0.85);
+            border-radius: 4px;
+            transform: rotate(-4deg);
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            display: block;
+        }
+
+        .side-note {
+            border-radius: 20px;
+            background: #fff3f8;
+            padding: 18px;
+        }
+
+        .side-note h3 {
+            font-family: "Baloo 2", cursive;
+            color: #ff477e;
+            font-size: 34px;
+            line-height: 1;
+        }
+
+        .side-note p {
+            margin-top: 10px;
+            color: #616779;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .checklist {
+            grid-column: 1 / -1;
+            border: 2px dashed #d7d7df;
+            border-radius: 20px;
+            padding: 16px;
+        }
+
+        .checklist h4 {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .checklist ul {
+            list-style: none;
+            color: #646b7a;
+            line-height: 1.9;
+            font-size: 14px;
+        }
+
+        .board {
+            display: none;
+        }
+
+        .board.active {
+            display: block;
+            animation: fadeUp 0.5s ease;
+        }
+
+        .grid-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-family: "Baloo 2", cursive;
+            font-size: 31px;
+            color: #263049;
+        }
+
+        .icon-box {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            background: #ffe7f1;
+            border-radius: 14px;
+            font-size: 18px;
+        }
+
+        .quest-box {
+            background: linear-gradient(135deg, #fff0f7, #f1ecff);
+            border-radius: 24px;
+            padding: 18px;
+        }
+
+        .tiny-label {
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: #ff4d8d;
+            margin-bottom: 8px;
+        }
+
+        .quest-box p {
+            font-size: 20px;
+            line-height: 1.6;
+            font-weight: 800;
+            color: #31364a;
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e7e7ef;
+            border-radius: 18px;
+            font-size: 15px;
+            outline: none;
+            margin-top: 14px;
+            background: white;
+        }
+
+        .input:focus {
+            border-color: #ff7db3;
+        }
+
+        .status {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: #f6f7fb;
+            color: #485065;
+            font-weight: 600;
+            line-height: 1.6;
+            min-height: 46px;
+        }
+
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f5f7fa;
+            padding: 12px 14px;
+            border-radius: 16px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #4e566b;
+        }
+
+        .badge {
+            background: #111827;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        .reason-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .reason {
+            border: 2px dashed #ffd2e5;
+            background: #fff4f9;
+            border-radius: 20px;
+            padding: 14px;
+            line-height: 1.7;
+            font-weight: 700;
+            color: #555b6d;
+            font-size: 14px;
+        }
+
+        .song-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 14px;
+        }
+
+        .song-panel {
+            background: #f6f7fb;
+            border: 1px solid #e7e8ef;
+            border-radius: 22px;
+            padding: 16px;
+        }
+
+        .song-panel h3 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .song-panel .artist {
+            color: #7a8090;
+            font-size: 14px;
+        }
+
+        .lyrics {
+            margin-top: 14px;
+            background: white;
+            border-radius: 18px;
+            padding: 14px;
+            line-height: 1.8;
+            color: #4f5666;
+            font-size: 14px;
+        }
+
+        .music-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .play {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            background: #111827;
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 14px;
+        }
+
+        .bar {
+            flex: 1;
+            height: 8px;
+            background: #dfe3eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .bar div {
+            width: 52%;
+            height: 100%;
+            background: #23293a;
+            border-radius: 999px;
+        }
+
+        .moments-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .moment {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 4px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            min-height: 180px;
+            background: #eee;
+        }
+
+        .moment.big {
+            grid-column: span 2;
+            grid-row: span 2;
+            min-height: 374px;
+        }
+
+        .caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 12px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.58), transparent);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .timeline-list,
+        .daily-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .timeline-item {
+            border-radius: 20px;
+            padding: 14px;
+            background: linear-gradient(90deg, #fff8df, #fff0f6);
+        }
+
+        .timeline-item .small {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #7e8595;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item h4 {
+            margin-bottom: 5px;
+            font-size: 17px;
+        }
+
+        .timeline-item p,
+        .daily-item {
+            color: #5e6473;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .daily-item {
+            background: #eaf8ff;
+            border: 1px solid #cfeeff;
+            border-radius: 18px;
+            padding: 14px;
+            font-weight: 700;
+        }
+
+        .done-box {
+            background: linear-gradient(135deg, #ebfff3, #e8fffc);
+            border-radius: 24px;
+            padding: 18px;
+        }
+
+        .done-box h3 {
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        .done-box p {
+            line-height: 1.8;
+            margin-top: 8px;
+            color: #4e5567;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.72);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 999;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .letter-box {
+            width: 100%;
+            max-width: 860px;
+            max-height: 90vh;
+            overflow: auto;
+            background: #fffaf3;
+            border-radius: 28px;
+            padding: 26px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.28);
+        }
+
+        .letter-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .letter-top .sub {
+            font-size: 12px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: #ff4d8d;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .letter-top h3 {
+            font-size: 34px;
+            line-height: 1.1;
+        }
+
+        .letter-content {
+            border: 2px dashed #ffd8e8;
+            background: white;
+            border-radius: 22px;
+            padding: 18px;
+            white-space: pre-line;
+            line-height: 1.95;
+            color: #4a5163;
+            font-size: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1100px) {
+
+            .hero-grid,
+            .grid-board,
+            .moments-grid,
+            .song-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .moment.big {
+                grid-column: span 1;
+                grid-row: span 1;
+                min-height: 250px;
+            }
+
+            .reason-grid,
+            .mini-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .hero {
+                min-height: auto;
+                padding: 18px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 25px;
+            }
+
+            .letter-top {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <div class="inner">
+
+            <section class="hero" id="heroPage">
+                <div class="doodle" style="left: 4%; top: 10%;">✦</div>
+                <div class="doodle" style="left: 12%; top: 68%;">♡</div>
+                <div class="doodle" style="left: 26%; top: 8%;">★</div>
+                <div class="doodle" style="left: 38%; top: 81%;">♫</div>
+                <div class="doodle" style="left: 54%; top: 14%;">✿</div>
+                <div class="doodle" style="left: 69%; top: 77%;">→</div>
+                <div class="doodle" style="left: 84%; top: 12%;">❤</div>
+                <div class="doodle" style="left: 92%; top: 58%;">☁</div>
+
+                <div class="hero-grid">
+                    <div>
+                        <div class="pill">✨ made with too much love</div>
+                        <h1>HAI, THIS IS FOR YOU <span class="accent">MANAS</span></h1>
+                        <p>
+                            Hai birthday boy. This is for you — my baby, my bhanupati, my favorite person.
+                            I wanted to make you something that feels a little like us: soft, filmy, funny,
+                            and full of love.
                         </p>
-                        <div className="mt-6 flex flex-wrap items-center gap-3">
-                            <button onClick={()=> setStarted(true)}
-                                className="rounded-2xl bg-slate-900 px-5 py-3 font-bold text-white shadow-lg transition
-                                hover:scale-[1.02]"
-                                >
-                                Start your birthday quest
-                            </button>
-                            <Sticker>From {story.fromName} ♡</Sticker>
+
+                        <div class="hero-buttons">
+                            <button class="btn btn-dark" onclick="startQuest()">Start your birthday quest</button>
+                            <div class="pill">From Anter Walia ♡</div>
                         </div>
                     </div>
 
-                    <ScrapCard rotate={2} className="bg-[#fffdf8]">
-                        <div className="grid grid-cols-2 gap-3">
-                            <img src={story.photos[0]} className="h-40 w-full rounded-[20px] object-cover" />
-                            <div className="rounded-[20px] bg-pink-50 p-4">
-                                <div className="text-2xl font-black text-pink-500">make a wish, Manas!</div>
-                                <div className="mt-3 text-sm text-slate-600">May every little thing you wish for this
-                                    year find its way to you ✨</div>
-                                <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
-                                    <Gift size={16} /> it’s your day
-                                </div>
+                    <div class="scrap-card">
+                        <div class="tape"></div>
+                        <div class="mini-grid">
+                            <img src="photo1.jpeg" alt="Manas" class="photo" />
+                            <div class="side-note">
+                                <h3>make a wish!</h3>
+                                <p>
+                                    May every little thing you wish for this year find its way to you ✨
+                                </p>
+                                <p style="margin-top:12px;font-weight:800;color:#434b5d;">🎁 it’s your day</p>
                             </div>
-                            <div className="col-span-2 rounded-[20px] border-2 border-dashed border-slate-300 p-4">
-                                <div className="mb-2 flex items-center gap-2 text-slate-800">
-                                    <CalendarDays size={18} /> Birthday Mission Checklist
-                                </div>
-                                <ul className="space-y-2 text-sm text-slate-600">
+
+                            <div class="checklist">
+                                <h4>🎂 Birthday Mission Checklist</h4>
+                                <ul>
                                     <li>□ solve clues</li>
                                     <li>□ unlock the letter</li>
                                     <li>□ feel very, very loved</li>
                                 </ul>
                             </div>
                         </div>
-                    </ScrapCard>
+                    </div>
                 </div>
-            </motion.section>
-            ) : (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <ScrapCard rotate={-1} className="xl:col-span-1">
-                    <SectionTitle icon={Lock}>Birthday Quest</SectionTitle>
-                    <div className="mb-3 flex items-center justify-between rounded-2xl bg-slate-50 p-3">
-                        <div className="text-sm font-semibold text-slate-700">Progress</div>
-                        <div className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">{progress}
-                        </div>
-                    </div>
+            </section>
 
-                    <AnimatePresence mode="wait">
-                        {!done ? (
-                        <motion.div key={step} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{
-                            opacity: 0, x: -15 }} className="space-y-4">
-                            <div className="rounded-[24px] bg-gradient-to-br from-pink-50 to-violet-50 p-5">
-                                <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-pink-500">clue
-                                    {step + 1}</div>
-                                <p className="text-lg font-bold leading-8 text-slate-800">{story.clues[step].prompt}</p>
-                            </div>
-                            <input value={input} onChange={(e)=> setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && submit()}
-                            placeholder="type your answer here..."
-                            className="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-slate-800
-                            outline-none ring-0 transition focus:border-pink-400"
-                            />
-                            <button onClick={submit}
-                                className="inline-flex items-center gap-2 rounded-2xl bg-pink-400 px-4 py-3 font-bold text-slate-900 shadow-md transition hover:translate-y-[-1px]">
-                                Submit
-                                <ArrowRight size={16} />
-                            </button>
-                            {status && (
-                            <div className="rounded-2xl bg-slate-50 p-3 text-sm font-medium text-slate-700">{status}
-                            </div>
-                            )}
-                        </motion.div>
-                        ) : (
-                        <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                            className="rounded-[24px] bg-gradient-to-br from-emerald-50 to-teal-50 p-5">
-                            <div className="mb-3 inline-flex rounded-full bg-emerald-100 p-2 text-emerald-600">
-                                <CheckCircle2 size={18} />
-                            </div>
-                            <h3 className="text-2xl font-black text-slate-900">You did it 🎉</h3>
-                            <p className="mt-2 leading-7 text-slate-700">{story.finalMessage}</p>
-                            <button onClick={()=> setShowLetter(true)}
-                                className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-bold text-white"
-                                >
-                                {story.finalButtonText}
-                            </button>
-                        </motion.div>
-                        )}
-                    </AnimatePresence>
-                </ScrapCard>
-
-                <ScrapCard rotate={2} className="bg-[#fffdfa]">
-                    <SectionTitle icon={Heart}>{story.reasonsTitle}</SectionTitle>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                        {story.reasons.map((reason, i) => (
-                        <div key={i}
-                            className="rounded-[22px] border-2 border-dashed border-pink-200 bg-pink-50/60 p-4 text-sm font-semibold leading-6 text-slate-700">
-                            <span className="mr-2 text-lg">{["💘", "🌷", "🫶", "✨", "🥺", "💭"][i % 6]}</span>
-                            {reason}
+            <section class="board" id="mainBoard">
+                <div class="grid-board">
+                    <div class="scrap-card">
+                        <div class="tape"></div>
+                        <div class="section-title"><span class="icon-box">🔐</span> Birthday Quest</div>
+                        <div class="progress">
+                            <span>Progress</span>
+                            <span class="badge" id="progressBadge">0/3</span>
                         </div>
-                        ))}
-                    </div>
-                </ScrapCard>
 
-                <ScrapCard rotate={-2}>
-                    <SectionTitle icon={Music}>Our song</SectionTitle>
-                    <div className="grid gap-4 md:grid-cols-[1fr_1.1fr]">
-                        <div className="overflow-hidden rounded-[24px]">
-                            <img src={story.photos[1]} className="h-56 w-full object-cover" />
+                        <div id="questArea">
+                            <div class="quest-box">
+                                <div class="tiny-label" id="clueLabel">clue 1</div>
+                                <p id="clueText">First clue 💌 — Where did we first meet?</p>
+                            </div>
+
+                            <input class="input" id="answerInput" type="text" placeholder="type your answer here..."
+                                onkeydown="if(event.key==='Enter'){submitAnswer()}" />
+
+                            <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+                                <button class="btn btn-pink" onclick="submitAnswer()">Submit</button>
+                                <button class="btn btn-soft" onclick="skipHint()">Hint</button>
+                            </div>
+
+                            <div class="status" id="statusBox"></div>
                         </div>
-                        <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
-                            <div className="text-xl font-black text-slate-900">{story.song.title}</div>
-                            <div className="text-sm font-medium text-slate-500">{story.song.artist}</div>
-                            <div className="mt-4 rounded-2xl bg-white p-4 text-sm leading-7 text-slate-700">
-                                “{story.song.lyric}”</div>
-                            <div className="mt-4 flex items-center gap-3 text-slate-600">
-                                <button className="rounded-full bg-slate-900 p-3 text-white">
-                                    <Music size={16} />
+
+                        <div id="doneArea" class="hidden">
+                            <div class="done-box">
+                                <div style="font-size:24px;">✅</div>
+                                <h3>You did it 🎉</h3>
+                                <p>
+                                    Happy birthday, my love. Damn, I’m lucky. Out of everyone, I get to love you —
+                                    and that will always be one of my favorite things about life.
+                                </p>
+                                <button class="btn btn-dark" style="margin-top:16px;" onclick="openLetter()">
+                                    Open your birthday letter
                                 </button>
-                                <div className="h-1.5 flex-1 rounded-full bg-slate-200">
-                                    <div className="h-1.5 w-1/2 rounded-full bg-slate-800" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scrap-card">
+                        <div class="tape"></div>
+                        <div class="section-title"><span class="icon-box">💘</span> Reasons why I love you</div>
+                        <div class="reason-grid">
+                            <div class="reason">💗 You love me like your family.</div>
+                            <div class="reason">✨ You know what is right and what is wrong.</div>
+                            <div class="reason">🫶 You always give me your time.</div>
+                            <div class="reason">🌷 You are the best person I have ever met.</div>
+                            <div class="reason">😂 You are the funniest guy I know.</div>
+                            <div class="reason">🥺 You love me like crazy and stay through thick and thin.</div>
+                        </div>
+                    </div>
+
+                    <div class="scrap-card">
+                        <div class="tape"></div>
+                        <div class="section-title"><span class="icon-box">🎵</span> Our song</div>
+                        <div class="song-grid">
+                            <img src="photo2.jpeg" alt="Us" class="photo" style="min-height:260px;" />
+                            <div class="song-panel">
+                                <h3>Bade Achhe Lagte Hain</h3>
+                                <div class="artist">Our song</div>
+                                <div class="lyrics">
+                                    “Bade achhe lagte hain... yeh dharti, yeh nadiya, yeh raina... aur tum.”
+                                </div>
+                                <div class="music-row">
+                                    <div class="play">▶</div>
+                                    <div class="bar">
+                                        <div></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </ScrapCard>
 
-                <ScrapCard rotate={1} className="xl:col-span-2">
-                    <SectionTitle icon={Camera}>Our moment</SectionTitle>
-                    <div className="grid gap-4 md:grid-cols-4">
-                        {story.photos.map((src, i) => (
-                        <div key={i} className={`${i===0 ? "md:col-span-2 md:row-span-2" : "" } relative overflow-hidden
-                            rounded-[24px] border-4 border-white shadow-sm`}>
-                            <img src={src} className={`w-full object-cover ${i===0 ? "h-[340px]" : "h-[160px]" }`} />
-                            <div
-                                className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-3 text-sm font-semibold text-white">
-                                {i === 0 ? "Mussoorie, hills, calls, chaos, and you. My favorite kind of story." :
-                                `memory ${i}`}
+                    <div class="scrap-card" style="grid-column: span 2;">
+                        <div class="tape"></div>
+                        <div class="section-title"><span class="icon-box">📸</span> Our moment</div>
+                        <div class="moments-grid">
+                            <div class="moment big">
+                                <img src="photo4.jpeg" alt="Our memory" class="photo" />
+                                <div class="caption">Mussoorie, hills, calls, chaos, and you. My favorite kind of story.
+                                </div>
+                            </div>
+                            <div class="moment">
+                                <img src="photo3.jpeg" alt="Call memory" class="photo" />
+                                <div class="caption">Even the distance became softer with you.</div>
+                            </div>
+                            <div class="moment">
+                                <img src="photo2.jpeg" alt="Us selfie" class="photo" />
+                                <div class="caption">You and me. Still my favorite frame.</div>
+                            </div>
+                            <div class="moment">
+                                <img src="photo1.jpeg" alt="Manas pic" class="photo" />
+                                <div class="caption">Birthday boy energy only.</div>
                             </div>
                         </div>
-                        ))}
                     </div>
-                </ScrapCard>
 
-                <ScrapCard rotate={-1}>
-                    <SectionTitle icon={Star}>Timeline of us</SectionTitle>
-                    <div className="space-y-3">
-                        {story.timeline.map((item, i) => (
-                        <div key={i} className="rounded-[22px] bg-gradient-to-r from-yellow-50 to-rose-50 p-4">
-                            <div className="mb-1 text-xs font-black uppercase tracking-[0.2em] text-slate-500">
-                                {item.sticker} chapter {i + 1}</div>
-                            <div className="font-black text-slate-800">{item.title}</div>
-                            <div className="mt-1 text-sm leading-6 text-slate-600">{item.text}</div>
+                    <div class="scrap-card">
+                        <div class="tape"></div>
+                        <div class="section-title"><span class="icon-box">🗺️</span> Timeline of us</div>
+                        <div class="timeline-list">
+                            <div class="timeline-item">
+                                <div class="small">🏔️ chapter 1</div>
+                                <h4>Mussoorie trips</h4>
+                                <p>Where we first met, and where my heart quietly began choosing you.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="small">🏍️ chapter 2</div>
+                                <h4>Bike ride through the hills</h4>
+                                <p>One of my first real memories with you — windy roads, pretty views, and you.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="small">🚗 chapter 3</div>
+                                <h4>Chandigarh gedi + Zirakpur meet</h4>
+                                <p>The kind of memories that replay in my mind when I miss you the most.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="small">📆 chapter 4</div>
+                                <h4>August</h4>
+                                <p>Now I’m just looking forward to meeting you again and making even more memories with
+                                    you.</p>
+                            </div>
                         </div>
-                        ))}
                     </div>
-                </ScrapCard>
 
-                <ScrapCard rotate={2}>
-                    <SectionTitle icon={Sparkles}>Daily reminder</SectionTitle>
-                    <div className="space-y-3">
-                        {story.dailyReminders.map((line, i) => (
-                        <div key={i}
-                            className="rounded-[18px] border border-cyan-200 bg-cyan-50 px-4 py-3 font-semibold text-slate-700">
-                            {line}
+                    <div class="scrap-card">
+                        <div class="tape"></div>
+                        <div class="section-title"><span class="icon-box">✨</span> Daily reminder</div>
+                        <div class="daily-list">
+                            <div class="daily-item">Distance is temporary.</div>
+                            <div class="daily-item">Loving you is permanent.</div>
+                            <div class="daily-item">Next birthday, I won’t be on a screen. I’ll be right there.</div>
+                            <div class="daily-item">Damn, I’m lucky.</div>
                         </div>
-                        ))}
                     </div>
-                </ScrapCard>
-            </div>
-            )}
+                </div>
+            </section>
         </div>
     </div>
 
-    <AnimatePresence>
-        {showLetter && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 grid place-items-center bg-slate-900/75 p-4 backdrop-blur-sm">
-            <motion.div initial={{ y: 30, scale: 0.96 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, scale: 0.98 }}
-                className="max-h-[90vh] w-full max-w-3xl overflow-auto rounded-[30px] bg-[#fffaf3] p-6 shadow-2xl md:p-8">
-                <div className="mb-5 flex items-center justify-between gap-4">
-                    <div>
-                        <div className="text-sm font-bold uppercase tracking-[0.25em] text-pink-500">for {story.boyName}
-                        </div>
-                        <h3 className="text-3xl font-black text-slate-900">Happy Birthday, my love ♡</h3>
-                    </div>
-                    <button onClick={()=> setShowLetter(false)} className="rounded-full bg-slate-100 px-4 py-2 font-bold
-                        text-slate-700">Close</button>
+    <div class="modal" id="letterModal">
+        <div class="letter-box">
+            <div class="letter-top">
+                <div>
+                    <div class="sub">for Manas Walia</div>
+                    <h3>Happy Birthday, my love ♡</h3>
                 </div>
-                <div
-                    className="rounded-[24px] border-2 border-dashed border-rose-200 bg-white p-5 text-[15px] leading-8 text-slate-700">
-                    {story.letter}
-                </div>
-            </motion.div>
-        </motion.div>
-        )}
-    </AnimatePresence>
-</div>
-);
-}
+                <button class="btn btn-soft" onclick="closeLetter()">Close</button>
+            </div>
+
+            <div class="letter-content">
+                Happy birthday my baby.
+
+                I do not even know where to start because there is so much I feel for you and somehow words still feel
+                small. You came into my life and made it softer, safer, and so much happier.
+
+                From Mussoorie to our bike ride through the hills, from Chandigarh gedi to Zirakpur, from sleepy calls
+                to missing you on random days — every version of us means so much to me.
+
+                I love the way you love me, so fully and so genuinely. I love that you give me your time, your care,
+                your patience, your laughter, and your whole heart. I love that you are the funniest guy I know, but
+                also the person I can trust when life feels heavy. You make me feel chosen, protected, and deeply loved.
+
+                Even with the distance, you still feel like home to me. And that is rare. That is special. That is you.
+
+                I know this birthday is on a screen, but my love for you is not. It is real, steady, loud, and all
+                yours. Thank you for being my person, my comfort, my baby, my bhanupati.
+
+                I am so proud of the man you are, and I feel ridiculously lucky that I get to love you. I cannot wait
+                for August. I cannot wait for more rides, more laughter, more hugs, and more us.
+
+                Happy birthday, my love. I hope this year is kind to you in every possible way — and I hope you always
+                remember that no matter what, I am with you, through every thick and thin.
+
+                I love you. Always.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const clues = [
+            {
+                question: "First clue 💌 — Where did we first meet?",
+                answers: ["mussorie", "mussoorie"],
+                success: "Yesss. Mussoorie was the beginning of everything beautiful."
+            },
+            {
+                question: "Second clue 🏍️ — What was one of our first real memories together?",
+                answers: ["bike ride thru hills", "bike ride through hills", "bike ride", "hills bike ride"],
+                success: "Exactly. That bike ride through the hills still lives in my head rent free."
+            },
+            {
+                question: "Third clue 🎵 — What is our song?",
+                answers: ["bade ache lagte hai", "bade achhe lagte hain", "bade ache lagte hain", "bade achhe lagte hai"],
+                success: "Correct. You’ve unlocked the final surprise, baby."
+            }
+        ];
+
+        let currentStep = 0;
+
+        function startQuest() {
+            document.getElementById("heroPage").style.display = "none";
+            document.getElementById("mainBoard").classList.add("active");
+            updateQuest();
+        }
+
+        function normalize(text) {
+            return text.toLowerCase().trim().replace(/\s+/g, " ");
+        }
+
+        function updateQuest() {
+            if (currentStep >= clues.length) {
+                document.getElementById("questArea").classList.add("hidden");
+                document.getElementById("doneArea").classList.remove("hidden");
+                document.getElementById("progressBadge").textContent = clues.length + "/" + clues.length;
+                return;
+            }
+
+            document.getElementById("clueLabel").textContent = "clue " + (currentStep + 1);
+            document.getElementById("clueText").textContent = clues[currentStep].question;
+            document.getElementById("progressBadge").textContent = currentStep + "/" + clues.length;
+            document.getElementById("answerInput").value = "";
+            document.getElementById("statusBox").textContent = "";
+        }
+
+        function submitAnswer() {
+            const input = normalize(document.getElementById("answerInput").value);
+            if (!input) {
+                document.getElementById("statusBox").textContent = "Type something first 😌";
+                return;
+            }
+
+            const validAnswers = clues[currentStep].answers.map(normalize);
+            const matched = validAnswers.some(ans => input.includes(ans) || ans.includes(input));
+
+            if (matched) {
+                document.getElementById("statusBox").textContent = clues[currentStep].success;
+                currentStep++;
+                setTimeout(updateQuest, 900);
+            } else {
+                document.getElementById("statusBox").textContent = "Nopeee, try again cutie 💭";
+            }
+        }
+
+        function skipHint() {
+            const hints = [
+                "Hint: hill station 👀",
+                "Hint: vroom vroom + pretty views 🏍️",
+                "Hint: '... aur tum' 🎶"
+            ];
+            document.getElementById("statusBox").textContent = hints[currentStep];
+        }
+
+        function openLetter() {
+            document.getElementById("letterModal").classList.add("show");
+        }
+
+        function closeLetter() {
+            document.getElementById("letterModal").classList.remove("show");
+        }
+
+        window.onclick = function (e) {
+            const modal = document.getElementById("letterModal");
+            if (e.target === modal) {
+                closeLetter();
+            }
+        };
+    </script>
+</body>
+
+</html>
