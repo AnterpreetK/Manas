@@ -387,39 +387,6 @@
             font-size: 14px;
         }
 
-        .music-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 14px;
-        }
-
-        .play {
-            width: 42px;
-            height: 42px;
-            border-radius: 999px;
-            background: #111827;
-            color: white;
-            display: grid;
-            place-items: center;
-            font-size: 14px;
-        }
-
-        .bar {
-            flex: 1;
-            height: 8px;
-            background: #dfe3eb;
-            border-radius: 999px;
-            overflow: hidden;
-        }
-
-        .bar div {
-            width: 52%;
-            height: 100%;
-            background: #23293a;
-            border-radius: 999px;
-        }
-
         .moments-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -757,18 +724,20 @@
                         <div class="section-title"><span class="icon-box">🎵</span> Our song</div>
                         <div class="song-grid">
                             <img src="photo2.jpeg" alt="Us" class="photo" style="min-height:260px;" />
+
                             <div class="song-panel">
                                 <h3>Bade Achhe Lagte Hain</h3>
                                 <div class="artist">Our song</div>
+
                                 <div class="lyrics">
                                     “Bade achhe lagte hain... yeh dharti, yeh nadiya, yeh raina... aur tum.”
                                 </div>
-                                <div class="music-row">
-                                    <div class="play">▶</div>
-                                    <div class="bar">
-                                        <div></div>
-                                    </div>
-                                </div>
+
+                                <iframe style="border-radius:16px; margin-top:16px;"
+                                    src="https://open.spotify.com/embed/track/6MZCYPT3hZPzwJGLnXn1RF" width="100%"
+                                    height="80" frameborder="0" allowfullscreen=""
+                                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+                                </iframe>
                             </div>
                         </div>
                     </div>
@@ -883,17 +852,26 @@
         const clues = [
             {
                 question: "First clue 💌 — Where did we first meet?",
-                answers: ["mussorie", "mussoorie"],
+                answers: ["mussorie", "mussoorie", "dehradun"],
                 success: "Yesss. Mussoorie was the beginning of everything beautiful."
             },
             {
                 question: "Second clue 🏍️ — What was one of our first real memories together?",
-                answers: ["bike ride thru hills", "bike ride through hills", "bike ride", "hills bike ride, mines, mall road, lambhidhari mines, lambidhari mines"],
+                answers: [
+                    "bike ride thru hills",
+                    "bike ride through hills",
+                    "bike ride",
+                    "hills bike ride",
+                    "mines",
+                    "mall road",
+                    "lambhidhari mines",
+                    "lambidhari mines"
+                ],
                 success: "Exactly. That bike ride through the hills still lives in my head rent free."
             },
             {
                 question: "Third clue 🙈 — What do I call you pyaar se?",
-                answers: ["bhanupati", "banupati"],
+                answers: ["bhanupati", "banupati", "baby"],
                 success: "Correct. You’ve unlocked the final surprise, baby."
             }
         ];
@@ -948,7 +926,7 @@
             const hints = [
                 "Hint: hill station 👀",
                 "Hint: vroom vroom + pretty views 🏍️",
-                "Hint: '... aur tum' 🎶"
+                "Hint: bhanu + pati energy 😌"
             ];
             document.getElementById("statusBox").textContent = hints[currentStep];
         }
