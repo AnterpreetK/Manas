@@ -1,94 +1,378 @@
-<!DOCTYPE html>
-<html>
+import React, { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Heart, Star, Gift, Music, CalendarDays, Camera, Sparkles, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
 
-<head>
-    <title>Birthday Quest 💖</title>
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #0f172a;
-            color: white;
-            padding: 50px;
-        }
+const story = {
+boyName: "Manas Walia",
+fromName: "Anter Walia",
+title: "A little universe made just for you",
+subtitle: "Not just a birthday surprise — a scrapbook, a game, and a love letter.",
+accent: "from-fuchsia-500 via-pink-400 to-sky-400",
+introNote:
+"Hai birthday boy. This is for you — my baby, my bhanupati, my favorite person. I wanted to make you something that
+feels a little like us: soft, filmy, funny, and full of love.",
+clues: [
+{
+prompt: "First clue 💌 — Where did we first meet?",
+answer: "mussorie",
+success: "Yesss. Mussoorie was the beginning of everything beautiful.",
+},
+{
+prompt: "Second clue 🏍️ — What was one of our first real memories together?",
+answer: "bike ride thru hills",
+success: "Exactly. That bike ride through the hills still lives in my head rent free.",
+},
+{
+prompt: "Third clue 🎵 — What is our song?",
+answer: "bade ache lagte hai",
+success: "Correct. You’ve unlocked the final surprise, baby.",
+},
+],
+reasonsTitle: "Reasons why I love you",
+reasons: [
+"You love me like your family.",
+"You know what is right and what is wrong.",
+"You always give me your time.",
+"You are the best person I have ever met.",
+"You are the funniest guy I know.",
+"You love me like crazy and stay through thick and thin.",
+],
+timeline: [
+{ title: "Mussoorie trips", text: "Where we first met, and where my heart quietly began choosing you.", sticker: "🏔️"
+},
+{ title: "Bike ride through the hills", text: "One of my first real memories with you — windy roads, pretty views, and
+you.", sticker: "🏍️" },
+{ title: "Chandigarh gedi + Zirakpur meet", text: "The kind of memories that replay in my mind when I miss you the
+most.", sticker: "🚗" },
+{ title: "August", text: "Now I’m just looking forward to meeting you again and making even more memories with you.",
+sticker: "📆" },
+],
+dailyReminders: [
+"Distance is temporary.",
+"Loving you is permanent.",
+"Next birthday, I won’t be on a screen. I’ll be right there.",
+"Damn, I’m lucky.",
+],
+song: {
+title: "Bade Achhe Lagte Hain",
+artist: "Our song",
+lyric:
+"Bade achhe lagte hain... yeh dharti, yeh nadiya, yeh raina... aur tum.",
+},
+finalMessage:
+"Happy birthday, my love. Damn, I’m lucky. Out of everyone, I get to love you — and that will always be one of my
+favorite things about life.",
+finalButtonText: "Open your birthday letter",
+letter:
+"Happy birthday my baby. I do not even know where to start because there is so much I feel for you and somehow words
+still feel small. You came into my life and made it softer, safer, and so much happier. From Mussoorie to our bike ride
+through the hills, from Chandigarh gedi to Zirakpur, from sleepy calls to missing you on random days — every version of
+us means so much to me.
 
-        .box {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            margin: auto;
-        }
+I love the way you love me, so fully and so genuinely. I love that you give me your time, your care, your patience, your
+laughter, and your whole heart. I love that you are the funniest guy I know, but also the person I can trust when life
+feels heavy. You make me feel chosen, protected, and deeply loved.
 
-        input {
-            padding: 10px;
-            width: 70%;
-            border-radius: 8px;
-            border: none;
-        }
+Even with the distance, you still feel like home to me. And that is rare. That is special. That is you. I know this
+birthday is on a screen, but my love for you is not. It is real, steady, loud, and all yours. Thank you for being my
+person, my comfort, my baby, my bhanupati.
 
-        button {
-            padding: 10px 20px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 8px;
-            background: pink;
-            cursor: pointer;
-        }
-    </style>
-</head>
+I am so proud of the man you are, and I feel ridiculously lucky that I get to love you. I cannot wait for August. I
+cannot wait for more rides, more laughter, more hugs, and more us. Happy birthday, my love. I hope this year is kind to
+you in every possible way — and I hope you always remember that no matter what, I am with you, through every thick and
+thin.
 
-<body>
+I love you. Always.",
+photos: [
+"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop",
+"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
+"https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop",
+"https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop",
+],
+};
 
-    <div class="box">
-        <h2 id="question">Hey you 👀 Ready for your birthday surprise?</h2>
-        <input type="text" id="answer" placeholder="Type your answer here">
-        <br>
-        <button onclick="checkAnswer()">Submit</button>
-        <p id="response"></p>
+const doodles = ["✦", "❤", "★", "!", "♡", "☁", "↺", "✿", "♫", "→"];
+
+function Sticker({ children, className = "" }) {
+return (
+<div className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/70 px-3 py-1 text-xs
+    font-semibold text-slate-700 shadow-sm backdrop-blur ${className}`}>
+    {children}
+</div>
+);
+}
+
+function ScrapCard({ children, className = "", rotate = 0 }) {
+return (
+<motion.div initial={{ opacity: 0, y: 18, rotate: rotate - 2 }} animate={{ opacity: 1, y: 0, rotate }} transition={{
+    duration: 0.45 }} className={`relative rounded-[28px] border-4 border-white bg-white p-4
+    shadow-[0_15px_50px_rgba(0,0,0,0.12)] ${className}`}>
+    <div className="absolute -top-2 left-8 h-6 w-20 rotate-[-4deg] rounded-sm bg-yellow-200/80 blur-[0.2px]" />
+    {children}
+</motion.div>
+);
+}
+
+function SectionTitle({ icon: Icon, children }) {
+return (
+<div className="mb-4 flex items-center gap-3">
+    <div className="rounded-2xl bg-pink-100 p-2 text-pink-500">
+        <Icon size={18} />
+    </div>
+    <h2 className="font-black tracking-tight text-slate-800 text-2xl md:text-3xl">{children}</h2>
+</div>
+);
+}
+
+export default function BirthdayScrapbookQuest() {
+const [started, setStarted] = useState(false);
+const [step, setStep] = useState(0);
+const [input, setInput] = useState("");
+const [status, setStatus] = useState("");
+const [showLetter, setShowLetter] = useState(false);
+
+const done = step >= story.clues.length;
+const progress = useMemo(() => `${Math.min(step, story.clues.length)}/${story.clues.length}`, [step]);
+
+const submit = () => {
+const expected = story.clues[step]?.answer?.trim().toLowerCase();
+const received = input.trim().toLowerCase();
+if (!expected) return;
+if (received === expected) {
+setStatus(story.clues[step].success);
+setInput("");
+setTimeout(() => {
+setStep((s) => s + 1);
+setStatus("");
+}, 900);
+} else {
+setStatus("Nopeee, try again cutie 💭");
+}
+};
+
+return (
+<div className="min-h-screen bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-300 p-3 md:p-6">
+    <div
+        className="mx-auto max-w-7xl rounded-[34px] border border-white/30 bg-white/20 p-3 shadow-2xl backdrop-blur md:p-5">
+        <div className="rounded-[30px] bg-[#f7f3ee] p-4 md:p-6">
+            {!started ? (
+            <motion.section initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
+                className="relative overflow-hidden rounded-[34px] border-4 border-white bg-gradient-to-br from-white to-rose-50 p-6 md:p-10">
+                <div className="pointer-events-none absolute inset-0 opacity-80">
+                    {Array.from({ length: 18 }).map((_, i) => (
+                    <div key={i} className="absolute text-slate-300" style={{ left: `${(i * 17) % 95}%`, top: `${(i *
+                        13) % 88}%`, transform: `rotate(${(i * 11) % 40 - 20}deg)` }}>
+                        {doodles[i % doodles.length]}
+                    </div>
+                    ))}
+                </div>
+
+                <div className="grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
+                    <div className="relative z-10">
+                        <Sticker className="mb-4">
+                            <Sparkles size={14} /> made with too much love
+                        </Sticker>
+                        <h1 className="max-w-3xl text-4xl font-black leading-tight text-slate-900 md:text-6xl">
+                            HAI, THIS IS FOR YOU <span className="text-pink-500">{story.boyName}</span>
+                        </h1>
+                        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700 md:text-lg">
+                            {story.introNote}
+                        </p>
+                        <div className="mt-6 flex flex-wrap items-center gap-3">
+                            <button onClick={()=> setStarted(true)}
+                                className="rounded-2xl bg-slate-900 px-5 py-3 font-bold text-white shadow-lg transition
+                                hover:scale-[1.02]"
+                                >
+                                Start your birthday quest
+                            </button>
+                            <Sticker>From {story.fromName} ♡</Sticker>
+                        </div>
+                    </div>
+
+                    <ScrapCard rotate={2} className="bg-[#fffdf8]">
+                        <div className="grid grid-cols-2 gap-3">
+                            <img src={story.photos[0]} className="h-40 w-full rounded-[20px] object-cover" />
+                            <div className="rounded-[20px] bg-pink-50 p-4">
+                                <div className="text-2xl font-black text-pink-500">make a wish, Manas!</div>
+                                <div className="mt-3 text-sm text-slate-600">May every little thing you wish for this
+                                    year find its way to you ✨</div>
+                                <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                                    <Gift size={16} /> it’s your day
+                                </div>
+                            </div>
+                            <div className="col-span-2 rounded-[20px] border-2 border-dashed border-slate-300 p-4">
+                                <div className="mb-2 flex items-center gap-2 text-slate-800">
+                                    <CalendarDays size={18} /> Birthday Mission Checklist
+                                </div>
+                                <ul className="space-y-2 text-sm text-slate-600">
+                                    <li>□ solve clues</li>
+                                    <li>□ unlock the letter</li>
+                                    <li>□ feel very, very loved</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </ScrapCard>
+                </div>
+            </motion.section>
+            ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <ScrapCard rotate={-1} className="xl:col-span-1">
+                    <SectionTitle icon={Lock}>Birthday Quest</SectionTitle>
+                    <div className="mb-3 flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+                        <div className="text-sm font-semibold text-slate-700">Progress</div>
+                        <div className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">{progress}
+                        </div>
+                    </div>
+
+                    <AnimatePresence mode="wait">
+                        {!done ? (
+                        <motion.div key={step} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{
+                            opacity: 0, x: -15 }} className="space-y-4">
+                            <div className="rounded-[24px] bg-gradient-to-br from-pink-50 to-violet-50 p-5">
+                                <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-pink-500">clue
+                                    {step + 1}</div>
+                                <p className="text-lg font-bold leading-8 text-slate-800">{story.clues[step].prompt}</p>
+                            </div>
+                            <input value={input} onChange={(e)=> setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && submit()}
+                            placeholder="type your answer here..."
+                            className="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-slate-800
+                            outline-none ring-0 transition focus:border-pink-400"
+                            />
+                            <button onClick={submit}
+                                className="inline-flex items-center gap-2 rounded-2xl bg-pink-400 px-4 py-3 font-bold text-slate-900 shadow-md transition hover:translate-y-[-1px]">
+                                Submit
+                                <ArrowRight size={16} />
+                            </button>
+                            {status && (
+                            <div className="rounded-2xl bg-slate-50 p-3 text-sm font-medium text-slate-700">{status}
+                            </div>
+                            )}
+                        </motion.div>
+                        ) : (
+                        <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            className="rounded-[24px] bg-gradient-to-br from-emerald-50 to-teal-50 p-5">
+                            <div className="mb-3 inline-flex rounded-full bg-emerald-100 p-2 text-emerald-600">
+                                <CheckCircle2 size={18} />
+                            </div>
+                            <h3 className="text-2xl font-black text-slate-900">You did it 🎉</h3>
+                            <p className="mt-2 leading-7 text-slate-700">{story.finalMessage}</p>
+                            <button onClick={()=> setShowLetter(true)}
+                                className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-bold text-white"
+                                >
+                                {story.finalButtonText}
+                            </button>
+                        </motion.div>
+                        )}
+                    </AnimatePresence>
+                </ScrapCard>
+
+                <ScrapCard rotate={2} className="bg-[#fffdfa]">
+                    <SectionTitle icon={Heart}>{story.reasonsTitle}</SectionTitle>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        {story.reasons.map((reason, i) => (
+                        <div key={i}
+                            className="rounded-[22px] border-2 border-dashed border-pink-200 bg-pink-50/60 p-4 text-sm font-semibold leading-6 text-slate-700">
+                            <span className="mr-2 text-lg">{["💘", "🌷", "🫶", "✨", "🥺", "💭"][i % 6]}</span>
+                            {reason}
+                        </div>
+                        ))}
+                    </div>
+                </ScrapCard>
+
+                <ScrapCard rotate={-2}>
+                    <SectionTitle icon={Music}>Our song</SectionTitle>
+                    <div className="grid gap-4 md:grid-cols-[1fr_1.1fr]">
+                        <div className="overflow-hidden rounded-[24px]">
+                            <img src={story.photos[1]} className="h-56 w-full object-cover" />
+                        </div>
+                        <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                            <div className="text-xl font-black text-slate-900">{story.song.title}</div>
+                            <div className="text-sm font-medium text-slate-500">{story.song.artist}</div>
+                            <div className="mt-4 rounded-2xl bg-white p-4 text-sm leading-7 text-slate-700">
+                                “{story.song.lyric}”</div>
+                            <div className="mt-4 flex items-center gap-3 text-slate-600">
+                                <button className="rounded-full bg-slate-900 p-3 text-white">
+                                    <Music size={16} />
+                                </button>
+                                <div className="h-1.5 flex-1 rounded-full bg-slate-200">
+                                    <div className="h-1.5 w-1/2 rounded-full bg-slate-800" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ScrapCard>
+
+                <ScrapCard rotate={1} className="xl:col-span-2">
+                    <SectionTitle icon={Camera}>Our moment</SectionTitle>
+                    <div className="grid gap-4 md:grid-cols-4">
+                        {story.photos.map((src, i) => (
+                        <div key={i} className={`${i===0 ? "md:col-span-2 md:row-span-2" : "" } relative overflow-hidden
+                            rounded-[24px] border-4 border-white shadow-sm`}>
+                            <img src={src} className={`w-full object-cover ${i===0 ? "h-[340px]" : "h-[160px]" }`} />
+                            <div
+                                className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-3 text-sm font-semibold text-white">
+                                {i === 0 ? "Mussoorie, hills, calls, chaos, and you. My favorite kind of story." :
+                                `memory ${i}`}
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                </ScrapCard>
+
+                <ScrapCard rotate={-1}>
+                    <SectionTitle icon={Star}>Timeline of us</SectionTitle>
+                    <div className="space-y-3">
+                        {story.timeline.map((item, i) => (
+                        <div key={i} className="rounded-[22px] bg-gradient-to-r from-yellow-50 to-rose-50 p-4">
+                            <div className="mb-1 text-xs font-black uppercase tracking-[0.2em] text-slate-500">
+                                {item.sticker} chapter {i + 1}</div>
+                            <div className="font-black text-slate-800">{item.title}</div>
+                            <div className="mt-1 text-sm leading-6 text-slate-600">{item.text}</div>
+                        </div>
+                        ))}
+                    </div>
+                </ScrapCard>
+
+                <ScrapCard rotate={2}>
+                    <SectionTitle icon={Sparkles}>Daily reminder</SectionTitle>
+                    <div className="space-y-3">
+                        {story.dailyReminders.map((line, i) => (
+                        <div key={i}
+                            className="rounded-[18px] border border-cyan-200 bg-cyan-50 px-4 py-3 font-semibold text-slate-700">
+                            {line}
+                        </div>
+                        ))}
+                    </div>
+                </ScrapCard>
+            </div>
+            )}
+        </div>
     </div>
 
-    <script>
-        let step = 0;
-
-        const questions = [
-            "Where did we first meet? 💭",
-            "What nickname do I call you? 😏",
-            "What’s our song? 🎶",
-            "Final question: Who loves you the most? ❤️"
-        ];
-
-        const answers = [
-            "INSTAGRAM",
-            "BABY",
-            "PERFECT",
-            "YOU"
-        ];
-
-        function checkAnswer() {
-            let input = document.getElementById("answer").value.toUpperCase();
-
-            if (input === answers[step]) {
-                step++;
-
-                if (step < questions.length) {
-                    document.getElementById("question").innerText = questions[step];
-                    document.getElementById("answer").value = "";
-                    document.getElementById("response").innerText = "Correct 😌 Next one...";
-                } else {
-                    document.body.innerHTML = `
-        <h1>🎉 HAPPY BIRTHDAY MY LOVE 🎉</h1>
-        <p>You made it through... just like we made it through distance ❤️</p>
-        <p>I love you more than words can ever explain.</p>
-        <p>Now go check your surprise 🎁</p>
-      `;
-                }
-            } else {
-                document.getElementById("response").innerText = "Hmm nope 👀 try again";
-            }
-        }
-    </script>
-
-</body>
-
-</html>
+    <AnimatePresence>
+        {showLetter && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 grid place-items-center bg-slate-900/75 p-4 backdrop-blur-sm">
+            <motion.div initial={{ y: 30, scale: 0.96 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, scale: 0.98 }}
+                className="max-h-[90vh] w-full max-w-3xl overflow-auto rounded-[30px] bg-[#fffaf3] p-6 shadow-2xl md:p-8">
+                <div className="mb-5 flex items-center justify-between gap-4">
+                    <div>
+                        <div className="text-sm font-bold uppercase tracking-[0.25em] text-pink-500">for {story.boyName}
+                        </div>
+                        <h3 className="text-3xl font-black text-slate-900">Happy Birthday, my love ♡</h3>
+                    </div>
+                    <button onClick={()=> setShowLetter(false)} className="rounded-full bg-slate-100 px-4 py-2 font-bold
+                        text-slate-700">Close</button>
+                </div>
+                <div
+                    className="rounded-[24px] border-2 border-dashed border-rose-200 bg-white p-5 text-[15px] leading-8 text-slate-700">
+                    {story.letter}
+                </div>
+            </motion.div>
+        </motion.div>
+        )}
+    </AnimatePresence>
+</div>
+);
+}
